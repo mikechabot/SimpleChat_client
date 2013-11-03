@@ -26,16 +26,13 @@ public class SimpleChat {
 			client.start();
 			started = true;
 		} catch (UnknownHostException e) {			
-			System.out.print("\n");
-			System.out.println(">> Could not locate the host; try another or check again later.");			
+			System.out.println("\n>> Could not locate the host; try another, or check again later (UnknownHostException)");			
 		} catch (ConnectException e) {		
-			System.out.print("\n");
-			System.out.println(">> Could not connect to the socket address; try another port, or start checking for firewall issues");			
+			System.out.println("\n>> Could not connect to the socket address; try another port, or start checking for firewall issues (ConnectException)");			
 		} catch (IllegalArgumentException e) {			
-			System.out.print("\n");
-			System.out.println(">> Port out of range; try another");
+			System.out.println("\n>> Port out of range; try another (IllegalArgumentException)");
 		} catch (IOException e) {
-			System.out.println("Badness while acquiring socket connection");
+			System.out.println("\n>> Badness while acquiring socket connection (IOException)");
 			e.printStackTrace();
 		}
 	}
