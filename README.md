@@ -6,9 +6,18 @@ Client-side chat agent that connects to a specified socket address (hostname + p
 ## Connect to a SimpleChat server
 
 <ol>
+<li>Download client.jar and client.bat</li>
+<li>Double-click client.bat</li>
+<li>Anwer some basic questions about the chat server to connect</li>
+</ol>
+
+or
+
+<ol>
 <li>Download client.jar</li>
 <li>Open Command Prompt</li>
 <li>Navigate to JAR location</li>
+<code>> cd C:\Users\You\Desktop</code>
 <li>Connect to a SimplChat server: </li>
 <code>java -jar client.jar</code>
 <li>Anwer some basic questions about the chat server:</li>
