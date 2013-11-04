@@ -24,7 +24,7 @@ public class Client implements Runnable {
         	thread.start();
         	running = true;
 			System.out.print("\n");
-			System.out.println("-- You joined room " + socket.getPort() + " --");
+			System.out.println("-- You joined room " + socket.getPort() + " as User #" + socket.getLocalPort() + " --");
 			System.out.print("\n");
         } 
     } 
@@ -45,14 +45,9 @@ public class Client implements Runnable {
 	
 	@Override
 	public void run() {			
-		try {
-			console = new Scanner(System.in);						// Read data from console
-			fromServer = new Scanner(socket.getInputStream());		// Read data from server
-			toServer = new PrintWriter(socket.getOutputStream()); 	// Send data to server
+		try {						
+			fromServer = new Scanner(socket.getInputStream());		// Read text data from socket input stream			
 			while (running) {
-				String input = console.nextLine();	
-				toServer.println(input);			
-				toServer.flush();
 				if(fromServer.hasNext()) {
 					System.out.println(fromServer.nextLine());
 				}

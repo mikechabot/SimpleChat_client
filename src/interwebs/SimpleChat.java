@@ -1,6 +1,7 @@
 package interwebs;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -10,21 +11,27 @@ import java.util.Scanner;
 public class SimpleChat {
 
 	private Socket socket;
-	private Scanner scanner;
+	private Scanner console;
 	private String host;
 	private int port;
-	private static boolean started;
 	
-	public SimpleChat() {
-		scanner = new Scanner(System.in);
-	}
-		
-	public void start() {
+	public void start() {		
+		PrintWriter toServer;	// Send data to server
+		Client client;
 		try {
+			console = new Scanner(System.in);
 			socket = new Socket(host, port);
-			Client client = new Client(socket);
-			client.start();
-			started = true;
+			client = new Client(socket);	
+			toServer = new PrintWriter(socket.getOutputStream());
+			client.start();			
+			while (true) {
+				if(console.hasNextLine()) {
+					String input = console.nextLine();
+					toServer.println(input);		
+					toServer.flush();
+				}
+			}
+		
 		} catch (UnknownHostException e) {			
 			System.out.println("\n>> Could not locate the host; try another, or check again later (UnknownHostException)");			
 		} catch (ConnectException e) {		
@@ -34,19 +41,18 @@ public class SimpleChat {
 		} catch (IOException e) {
 			System.out.println("\n>> Badness while acquiring socket connection (IOException)");
 			e.printStackTrace();
-		}
+		} 
 	}
 	
 	public void getHostInfo() {
-		System.out.print("\n");
-		System.out.print("What's the hostname of the server? ");
-		host = scanner.nextLine();
+		console = new Scanner(System.in);	// Read data from console
+		System.out.print("\nWhat's the hostname of the server? ");
+		host = console.nextLine();
 		try {
 			System.out.print("What's the port number? ");
-			port = scanner.nextInt();
+			port = console.nextInt();
 		} catch (InputMismatchException e) {		
-			System.out.print("\n");
-			System.out.println(">> Port numbers can't contain non-numeric characters");			
+			System.out.println("\n>> Port numbers can't contain non-numeric characters");			
 		}
 	}
 	
@@ -55,7 +61,7 @@ public class SimpleChat {
 		System.out.println("| Welcome to SimpleChat! |");
 		System.out.println("+------------------------+");
 		SimpleChat simpleChat;
-		while (!started) {
+		while (true) {
 			simpleChat = new SimpleChat();
 			simpleChat.getHostInfo();
 			simpleChat.start();	
