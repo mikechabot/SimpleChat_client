@@ -23,9 +23,6 @@ public class Client implements Runnable {
     		thread = new Thread(this); 
         	thread.start();
         	running = true;
-			System.out.print("\n");
-			System.out.println("-- You joined room " + socket.getPort() + " as User #" + socket.getLocalPort() + " --");
-			System.out.print("\n");
         } 
     } 
     

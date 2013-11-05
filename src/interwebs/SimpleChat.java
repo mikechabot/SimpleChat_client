@@ -16,7 +16,7 @@ public class SimpleChat {
 	private int port;
 	
 	public void start() {		
-		PrintWriter toServer;	// Send data to server
+		PrintWriter toServer;	// Send text data to server
 		Client client;
 		try {
 			console = new Scanner(System.in);
@@ -30,8 +30,7 @@ public class SimpleChat {
 					toServer.println(input);		
 					toServer.flush();
 				}
-			}
-		
+			}		
 		} catch (UnknownHostException e) {			
 			System.out.println("\n>> Could not locate the host; try another, or check again later (UnknownHostException)");			
 		} catch (ConnectException e) {		
@@ -45,7 +44,7 @@ public class SimpleChat {
 	}
 	
 	public void getHostInfo() {
-		console = new Scanner(System.in);	// Read data from console
+		console = new Scanner(System.in);	// Read text data from console
 		System.out.print("\nWhat's the hostname of the server? ");
 		host = console.nextLine();
 		try {
