@@ -5,38 +5,32 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client implements Runnable {
+public class Heartbeat implements Runnable{
 	
-	private static final String GOODBYE_SRVR = "**GOODBYE_FROM_SERVER**";
-	private static final String GOODBYE_CLNT = "**GOODBYE_FROM_CLIENT**";
+	private static final String PING_CLNT = "**PING_FROM_CLIENT**";
 	
-	private Heartbeat heart;
-	private Socket socket;
+	private Client client;
 	private Thread thread;
+	private Socket socket;
 	private Scanner fromServer;
 	private PrintWriter toServer;
 	private boolean running;
 	
-	public Client(Socket socket) {
-		this.socket = socket;
+	public Heartbeat(Client client) {
+		this.client = client;
+		this.socket = client.getSocket();
 	}
 		
     public void start() { 
     	if (thread == null) { 
-    		thread = new Thread(this);
-    		heart = new Heartbeat(this);
-    		heart.start();
-    		thread.start();
+    		thread = new Thread(this); 
+        	thread.start();
         	running = true;
         } 
     }
     
     public boolean isRunning() {
     	return running;
-    }
-    
-    public Socket getSocket() {
-    	return socket;
     }
     
     public void stop() {
@@ -51,26 +45,26 @@ public class Client implements Runnable {
 		}
     	thread = null;
     }
-    
-	public void processServerMessage(String message) {
-		if(message.equals(GOODBYE_SRVR)) {
-			toServer.println(GOODBYE_CLNT);
-			toServer.flush();
-			heart.stop();
-			stop();
-		} else {
-			System.out.println(message);
-		}
-	}
-	
+    	
 	@Override
 	public void run() {			
 		try {						
 			fromServer = new Scanner(socket.getInputStream());		// Read text data from socket input stream
 			toServer = new PrintWriter(socket.getOutputStream());	// Send text data to server
-			while (running) {
-				if(fromServer.hasNext()) {
-					processServerMessage(fromServer.nextLine());
+			while (true) {
+				toServer.println(PING_CLNT);
+				if(toServer.checkError()) {
+					System.out.println(">> Disconnected from chat, press Enter to continue...");
+					client.stop();
+					stop();
+					break;
+				}
+				toServer.flush();
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					System.out.println("\n>> Thread sleep interrupted unexpectedly");
+					e.printStackTrace();
 				}
 			}
 		} catch (IOException e) {
@@ -78,6 +72,5 @@ public class Client implements Runnable {
 			e.printStackTrace();
 		}			
 	}
-
+	
 }
-

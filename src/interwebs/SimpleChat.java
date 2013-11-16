@@ -24,13 +24,15 @@ public class SimpleChat {
 			client = new Client(socket);	
 			toServer = new PrintWriter(socket.getOutputStream());
 			client.start();			
-			while (true) {
+			while (client.isRunning()) {
 				if(console.hasNextLine()) {
 					String input = console.nextLine();
 					toServer.println(input);		
 					toServer.flush();
 				}
-			}		
+			}
+			getHostInfo();
+			start();
 		} catch (UnknownHostException e) {			
 			System.out.println("\n>> Could not locate the host; try another, or check again later (UnknownHostException)");			
 		} catch (ConnectException e) {		
@@ -45,7 +47,7 @@ public class SimpleChat {
 	
 	public void getHostInfo() {
 		console = new Scanner(System.in);	// Read text data from console
-		System.out.print("\nWhat's the hostname of the server? ");
+		System.out.print("What's the hostname of the server? ");
 		host = console.nextLine();
 		try {
 			System.out.print("What's the port number? ");
@@ -59,6 +61,7 @@ public class SimpleChat {
 		System.out.println("+------------------------+");
 		System.out.println("| Welcome to SimpleChat! |");
 		System.out.println("+------------------------+");
+		System.out.print("\n");	// looks more purposeful than an empty string ;D
 		SimpleChat simpleChat;
 		while (true) {
 			simpleChat = new SimpleChat();
